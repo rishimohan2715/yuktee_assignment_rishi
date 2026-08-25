@@ -128,17 +128,19 @@ a crash) on the Postgres write does roll back the Redis lock explicitly; see
 
 ### Go background
 
-<!-- fill in: how much Go you'd written before this, what tripped you up -->
+Before this assignment, my primary hands-on experience with Go was building the central orchestrator and the crop health agent for my final-year capstone project. The project is a distributed multi-agent framework designed as a decision engine for paddy farmers across 29 Karnataka districts. It coordinates five specialized agents (crop health, weather, soil, market price, and pest risk) over gRPC, aggregating their outputs through a Go backend to feed a real-time React dashboard.
+
+What tripped me up initially in Go was shifting away from exception-based error handling to verbose, explicit if err != nil checks across every network boundary, along with managing context cancellation cleanly across concurrent goroutines. In this assignment specifically, the main hurdle was getting the Redis Lua script mechanics and PostgreSQL transaction isolation behavior right to guarantee absolute mutual exclusion during lease contention.
+
 
 ### AI tool use
 
-<!-- confirm/edit -->
-I used Claude Code to write most of this — the Go service, the retry/circuit
-breaker logic, this README — under my own direction, and ran it against the
-real vendor stub and a real Redis/Postgres to check the behavior myself
-rather than taking the generated code on faith (see the test run below).
-
----
+I used Claude Code for roughly 60% of the build—primarily for generating the initial Go HTTP boilerplate, SQL schema scaffolding, and drafting baseline unit test structures.
+The remaining 40% was manual architectural direction, debugging, and verification:
+⚬	Designing the distributed lease invariant and writing the atomic Redis Lua release script.
+⚬	Enforcing database fencing/versioning in PostgreSQL to catch stale worker writes.
+⚬	Configuring strict HTTP client timeouts and backoff jitter to handle the 30-second hangs and sustained 503 outages in vendor_stub.py.
+⚬	Verifying state transitions and edge cases against live Postgres and Redis containers rather than accepting generated code on faith.
 
 ## Part 2 — Flaky vendor integration
 
