@@ -280,14 +280,22 @@ provider abstraction at all.
 
 ## Part 4 — Two short questions
 
-<!-- fill in:
+What I'm Proudest of:
 
-1. Something on your CV you're proudest of, and something you'd now
-   describe differently. One paragraph each.
+ I’m proudest of prioritizing systems with real computational and architectural constraints over generic CRUD dashboards. In my multi-agent edge agricultural system and local ONNX runtime setups, the hard part wasn't writing API endpoints—it was managing edge latency, handling disconnected states, and preventing worker bottlenecks under strict hardware limits. I built them by starting from the failure modes first (network drops, memory pressure, slow inference) rather than stitching together tutorial boilerplates.
 
-2. Taking over a 70%-complete codebase you didn't write — first week, what
-   you touch, what you deliberately leave alone.
--->
+What I'd describe differently:
+
+ Earlier on my CV, I described projects by listing libraries and buzzwords—"built scalable full-stack app using React, Node, Express, MongoDB"—focusing on what tools I installed rather than the engineering trade-offs I made. Today, I’d rewrite those bullets to describe the actual invariants: state synchronization rules, database schema indexing, how race conditions were handled, and the specific failure recovery mechanisms implemented when third-party services stalled.
+
+What I touch:
+
+In my first week, my priority is getting the entire system running smoothly end-to-end and locking down our integration boundaries. I’d start by spinning up the local environment to trace how data actually flows from ingestion to database persistence. From there, I’d focus heavily on our external API integrations and worker boundaries making sure our HTTP timeouts, retry backoffs, and idempotency checks are rock solid. Third-party APIs are usually where systems silently bleed money through runaway retry loops or break during traffic spikes. Instrumenting clean, structured logging around these external calls and failure states ensures the system stays cost-efficient, predictable, and maintainable for the long haul.
+
+What I leave alone:
+
+I deliberately leave alone cosmetic cleanups, style debates, and premature architectural rewrites. If a service or database query is already working reliably and handling its edge cases, I’m not going to touch it just because the file layout looks unfamiliar or the Go/Python code feels slightly unidiomatic. Swapping out working libraries or trying to re-architect parts of the 70% that already function just introduces regressions and distracts from shipping. My goal in week one is to stabilize the foundations, verify the integration points, and help deliver the remaining 30% rather than rewriting code that’s already doing its job.
+
 
 ---
 
