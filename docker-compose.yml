@@ -1,0 +1,45 @@
+# Yuktee.ai — Technical Assignment
+# Redis and PostgreSQL, preconfigured. Run: docker compose up
+#
+#   Redis        localhost:6379   (no password)
+#   PostgreSQL   localhost:5432   db=yuktee  user=yuktee  password=yuktee
+#
+#   Connection string:
+#     postgres://yuktee:yuktee@localhost:5432/yuktee?sslmode=disable
+#
+# Prefer your own local Redis and Postgres? Completely fine — just say so in
+# your README. Nothing here is part of what we're assessing.
+#
+# Reset everything:  docker compose down -v
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: yuktee-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: yuktee-postgres
+    environment:
+      POSTGRES_DB: yuktee
+      POSTGRES_USER: yuktee
+      POSTGRES_PASSWORD: yuktee
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yuktee -d yuktee"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  pgdata:
